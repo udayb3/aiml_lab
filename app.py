@@ -25,6 +25,3 @@ def predict():
   return {
     str(i): ques.iloc[i[0]]['name'] for i in distances[1:6]
   }
-
-if __name__ =='__main__':
-  app.run(debug='True')
