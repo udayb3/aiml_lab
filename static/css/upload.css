@@ -1,1 +1,77 @@
-html { background: lightgrey}
+/* General Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, rgba(45, 123, 254, 0.8), rgba(116, 171, 250, 0.8));
+    color: #333;
+}
+
+/* Card container with shadow and rounded corners */
+.card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Styling */
+.img-fluid {
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+h3 {
+    font-weight: 600;
+    color: #1d3557;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Audio player */
+audio {
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #f4f4f4;
+    padding: 5px;
+}
+
+/* Button Styling */
+.btn {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #006bb3;
+    transform: translateY(-3px);
+}
+
+/* Add subtle shadow to text when hovering */
+h3:hover {
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Padding and margin tweaks */
+.container {
+    margin-top: 50px;
+}
+
+.row {
+    margin-bottom: 2rem;
+}
+
+/* Optional Animation for Button */
+.btn-lg {
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

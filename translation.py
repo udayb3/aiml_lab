@@ -2,8 +2,8 @@ import torch
 from IndicTransToolkit import IndicProcessor
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
-def translation(text):
-  ip = IndicProcessor(inference=True);  src_lan= 'eng_Latn'; tar_lan= 'hin_Deva'
+def translation(text, tar_lan= 'hin_Deva'):
+  ip = IndicProcessor(inference=True);  src_lan= 'eng_Latn'
   tokenizer = AutoTokenizer.from_pretrained("ai4bharat/indictrans2-en-indic-dist-200M", trust_remote_code=True)
   model = AutoModelForSeq2SeqLM.from_pretrained("ai4bharat/indictrans2-en-indic-dist-200M", trust_remote_code=True)
   sentences= [ text ]

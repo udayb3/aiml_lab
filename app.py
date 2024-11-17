@@ -20,18 +20,18 @@ def allowedFile(filename):
 @app.route('/uploads', methods=['POST', 'GET'])
 def uploaded_file():
   if request.method == 'POST':
-    img_file = request.files['file']
+    img_file = request.files['file']; lan= request.form['language']
     filename = secure_filename(img_file.filename)
     if allowedFile(filename):
       img_path= os.path.join(app.config['UPLOAD_FOLDER'], filename)
       img_file.save(img_path)
 
       # using models to generate caption and translate it
-      msg= get_caption(img_path); trans_msg= translation(msg)
-      file_path= text_to_speech(trans_msg, filename)
+      msg= get_caption(img_path); trans_msg= translation(msg, lan)
+      file_path= text_to_speech(trans_msg, filename, lan)
 
       img_path = "./static/images/"+filename; img_file.save(img_path)
-      return render_template('upload.html', message=msg, img_path= img_path, audio_path= file_path)
+      return render_template('upload.html', message=trans_msg, img_path= "files/" + filename, audio_path= file_path)
     else:
       msg = "File type not allowed"
       return render_template('upload.html', message=msg, img_path= "./static/images/"+filename)
