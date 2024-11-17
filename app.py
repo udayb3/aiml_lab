@@ -1,27 +1,44 @@
-from flask import Flask as flask, render_template, request
-import pickle
+from flask import Flask as flask, jsonify, request, render_template
+from werkzeug.utils import secure_filename
+from flask_cors import CORS
+import os
+from caption_generate import *
+from translation import *
+from spConverter import *
 
-with open('./ques_list.pkl' , 'rb') as f:
-  ques = pickle.load(f)
+ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg' ])
+UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Downloads'))
 
+app = flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1000 * 1000  # 100 MB of file size 
+app.config['CORS_HEADER'] = 'application/json'
 
-with open('./similarity.pkl' , 'rb') as f:
-  sim = pickle.load(f)
+def allowedFile(filename):
+  return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# __name__ is a special attribute which is equal to the part of the program which is running.
-app= flask(__name__)
+@app.route('/uploads', methods=['POST', 'GET'])
+def uploaded_file():
+  if request.method == 'POST':
+    img_file = request.files['file']
+    filename = secure_filename(img_file.filename)
+    if allowedFile(filename):
+      img_path= os.path.join(app.config['UPLOAD_FOLDER'], filename)
+      img_file.save(img_path)
 
-# The route function is a type of python decorator.
-@app.route('/')
+      # using models to generate caption and translate it
+      msg= get_caption(img_path); trans_msg= translation(msg)
+      file_path= text_to_speech(trans_msg, filename)
+
+      img_path = "./static/images/"+filename; img_file.save(img_path)
+      return render_template('upload.html', message=msg, img_path= img_path, audio_path= file_path)
+    else:
+      msg = "File type not allowed"
+      return render_template('upload.html', message=msg, img_path= "./static/images/"+filename)
+
+@app.route('/', methods=['GET'])
 def home():
   return render_template('index.html')
 
-@app.route("/predict", methods=['POST'])
-def predict():
-  data= request.form
-  inp= data['qName']
-  index = ques[ques['name'] == inp].index[0]
-  distances = sorted(list(enumerate(sim[index])),reverse=True,key = lambda x: x[1])
-  return {
-    str(i): ques.iloc[i[0]]['name'] for i in distances[1:6]
-  }
+if(__name__=="__main__"):
+  app.run(debug=True)
